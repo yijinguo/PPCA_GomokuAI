@@ -15,25 +15,25 @@ class NNetArchitecture(nn.Module):
         self.args = args
 
         self.cv = nn.Sequential(
-            nn.Conv2d(in_channels = 3, out_channels = 16, kernel_size = 5, padding = 2),
-            nn.BatchNorm2d(16),
+            nn.Conv2d(in_channels = 3, out_channels = 32, kernel_size = 5, padding = 2),
+            nn.BatchNorm2d(32),
             nn.ReLU(),
-            nn.Conv2d(in_channels = 16, out_channels = 16, kernel_size = 5, padding = 2),
-            nn.BatchNorm2d(16),
+            nn.Conv2d(in_channels = 32, out_channels = 64, kernel_size = 5, padding = 2),
+            nn.BatchNorm2d(64),
             nn.ReLU(),
-            nn.Conv2d(in_channels = 16, out_channels = 16, kernel_size = 5, padding = 2),
-            nn.BatchNorm2d(16),
+            nn.Conv2d(in_channels = 64, out_channels = 128, kernel_size = 5, padding = 2),
+            nn.BatchNorm2d(128),
             nn.ReLU(),
-            nn.Conv2d(in_channels = 16, out_channels = 10, kernel_size = 5, padding = 2),
+            nn.Conv2d(in_channels = 128, out_channels = 10, kernel_size = 5, padding = 2),
             nn.BatchNorm2d(10),
             nn.ReLU()
         )
         self.linear = nn.Sequential(
-            nn.Linear(in_features = 10*9*9, out_features = 64),
+            nn.Linear(in_features = 10*9*9, out_features = 100),
             nn.ReLU(),
-            nn.Linear(in_features = 64, out_features = 64),
-            nn.ReLU(),
-            nn.Linear(in_features = 64, out_features = self.action_size)
+            #nn.Linear(in_features = 32, out_features = 32),
+            #nn.ReLU(),
+            nn.Linear(in_features = 100, out_features = self.action_size)
         )
 
         for m in self.modules():
