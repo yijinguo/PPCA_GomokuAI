@@ -10,8 +10,8 @@ if __name__ == '__main__':
     g = Game(9, 5)
 
     # all players
-    # rp = RandomPlayer(g).play
-    # hp = HumanPlayer(g).play
+    rp = RandomPlayer(g).play
+    hp = HumanPlayer(g).play
 
     # nnet players
     n1 = NNet(g)
@@ -22,5 +22,5 @@ if __name__ == '__main__':
     n2.load_checkpoint('./checkpoint/', 'iteration-0025.pkl')
     p2 = NNPlayer(g, n2, 0).play
 
-    arena = Arena(p1, p2, g, display=g.display)
+    arena = Arena(hp, p1, g, display=g.display)
     print(arena.playGames(2, verbose=True))

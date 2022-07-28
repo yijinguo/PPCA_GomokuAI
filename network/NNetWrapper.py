@@ -7,7 +7,7 @@ from time import time
 from pytorch_classification.utils import Bar, AverageMeter
 from utils import *
 import os
-import numpy as np  
+import numpy as np
 import math
 import sys
 import copy
@@ -34,13 +34,12 @@ class NNetWrapper():
 
         """
             TODO: Choose a optimizer and scheduler
-
-            self.optimzer = ...
-            self.scheduler = ...
         """
-        #todo
         self.optimizer = optim.SGD(self.nnet.parameters(), lr = args.lr)
-        self.scheduler = optim.lr_scheduler.LambdaLR(self.optimizer, lr_lambda = lambda epoch : 1/(epoch+1))
+        #self.optimizer = optim.Adam(self.nnet.parameters(), lr = args.lr)
+        #self.scheduler = optim.lr_scheduler.LambdaLR(self.optimizer, lr_lambda = lambda epoch:0.1*epoch)
+        #self.scheduler = optim.lr_scheduler.ExponentialLR(self.optimizer, gamma = 0.65)
+        self.scheduler = optim.lr_scheduler.StepLR(self.optimizer, step_size = 10, gamma = 0.98)
 
         if args.cuda:
             self.nnet.cuda()
@@ -49,14 +48,11 @@ class NNetWrapper():
         """
             TODO: Design a policy loss function
         """
-        criterion = nn.MSELoss()
+        criterion = nn.KLDivLoss(reduction='batchmean')
         _loss_pi = criterion(outputs, targets)
         return _loss_pi
 
     def loss_v(self, outputs, targets):
-        """
-            TODO: Design a evaluation loss function
-        """
         criterion = nn.MSELoss()
         _loss_v = criterion(outputs, targets)
         return _loss_v
@@ -88,12 +84,6 @@ class NNetWrapper():
                     ), target_pis.contiguous().cuda(), target_vs.contiguous().cuda()
                 data_time.update(time() - end)
 
-                """
-                    TODO: Compute output & loss
-                    out_pi, out_v = ...
-                    l_pi = ... 
-                    l_v = ...
-                """
                 out_pi, out_v = self.nnet.forward(boards) 
                 l_pi = self.loss_pi(out_pi, target_pis)
                 l_v = self.loss_v(out_v, target_vs)
@@ -102,9 +92,6 @@ class NNetWrapper():
                 pi_losses.update(l_pi.item(), boards.size(0))
                 v_losses.update(l_v.item(), boards.size(0))
 
-                """
-                    TODO: Compute gradient (backward) and do optimizer step
-                """
                 self.optimizer.zero_grad()
                 total_loss.backward()
                 self.optimizer.step()
@@ -123,9 +110,6 @@ class NNetWrapper():
                 )
                 bar.next()
 
-        """
-            TODO: do scheduler step
-        """
         self.scheduler.step()
 
         bar.finish()
@@ -141,15 +125,9 @@ class NNetWrapper():
 
         with torch.no_grad():
             board = board.view(self.feat_cnt, self.board_x, self.board_y)
-
             # Switch to eval mode
             self.nnet.eval()
-
-            """
-                TODO: predict pi & v
-            """
             pi, v = self.nnet.forward(board)
-
             return torch.exp(pi).data.cpu().numpy()[0], v.data.cpu().numpy()[0]
 
     def save_checkpoint(self, folder='checkpoint', filename='checkpoint.pth.tar'):
