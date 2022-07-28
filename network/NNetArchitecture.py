@@ -31,7 +31,7 @@ class NNetArchitecture(nn.Module):
         self.linear = nn.Sequential(
             nn.Linear(in_features = 10*9*9, out_features = 100),
             nn.ReLU(),
-            #nn.Linear(in_features = 32, out_features = 32),
+            #nn.Linear(in_features = 32, out_features = 100),
             #nn.ReLU(),
             nn.Linear(in_features = 100, out_features = self.action_size)
         )

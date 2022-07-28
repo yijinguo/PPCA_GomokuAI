@@ -22,5 +22,5 @@ if __name__ == '__main__':
     n2.load_checkpoint('./checkpoint/', 'iteration-0025.pkl')
     p2 = NNPlayer(g, n2, 0).play
 
-    arena = Arena(hp, p1, g, display=g.display)
-    print(arena.playGames(2, verbose=True))
+    arena = Arena(p1, p1, g, display=g.display)
+    print(arena.playGames(50, verbose=True))
