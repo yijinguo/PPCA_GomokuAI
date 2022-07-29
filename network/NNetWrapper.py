@@ -36,7 +36,6 @@ class NNetWrapper():
             TODO: Choose a optimizer and scheduler
         """
         self.optimizer = optim.Adam(self.nnet.parameters(), lr = args.lr)
-        #self.optimizer = optim.Adam(self.nnet.parameters(), lr = args.lr)
         #self.scheduler = optim.lr_scheduler.LambdaLR(self.optimizer, lr_lambda = lambda epoch:0.1*epoch)
         #self.scheduler = optim.lr_scheduler.ExponentialLR(self.optimizer, gamma = 0.65)
         self.scheduler = optim.lr_scheduler.StepLR(self.optimizer, step_size = 10, gamma = 0.98)
