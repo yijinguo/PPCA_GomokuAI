@@ -19,8 +19,8 @@ if __name__ == '__main__':
     p1 = NNPlayer(g, n1, 0).play
 
     n2 = NNet(g)
-    n2.load_checkpoint('./checkpoint/', 'iteration-0025.pkl')
+    n2.load_checkpoint('./checkpoint/', 'iteration-0050.pkl')
     p2 = NNPlayer(g, n2, 0).play
 
-    arena = Arena(p1, p1, g, display=g.display)
-    print(arena.playGames(50, verbose=True))
+    arena = Arena(hp, p2, g, display=g.display)
+    print(arena.playGames(300, verbose=True))
